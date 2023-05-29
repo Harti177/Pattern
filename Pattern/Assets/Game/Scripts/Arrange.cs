@@ -18,14 +18,8 @@ namespace Harti.Pattern
 
         List<GameObject> instantiatedPrefabs;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-            ArrangeGame();
-        }
-
         [ContextMenu("Arrange")]
-        public void ArrangeGame()
+        public GameObject[][] ArrangeGame()
         {
             if (instantiatedPrefabs != null)
             {
@@ -35,39 +29,45 @@ namespace Harti.Pattern
                 }
             }
 
+            GameObject[][] holderGOs = new GameObject[yCount][];
             int[] holder = new int[xCount * yCount];
             int index;
 
             System.Random random = new System.Random(seed);
-            for (int i = 1; i < prefabsLimit.Length; i++)
+            for (int a = 1; a < prefabsLimit.Length; a++)
             {
-                for (int j = 0; j < prefabsLimit[i]; j++)
+                for (int b = 0; b < prefabsLimit[a]; b++)
                 {
                     index = random.Next(0, holder.Length - 1);
-                    holder[index] = i;
+                    holder[index] = a;
                 }
             }
 
             instantiatedPrefabs = new List<GameObject>();
 
             index = 0;
-            for (int i = 0; i < yCount; i++)
+            for (int j = 0; j < yCount; j++)
             {
-                for (int j = 0; j < xCount; j++)
+                holderGOs[j] = new GameObject[xCount];
+
+                for (int i = 0; i < xCount; i++)
                 {
 
-                    float rad = Mathf.PI / 180 * (j * (360 / xCount));
+                    float rad = Mathf.PI / 180 * (i * (360 / xCount));
                     float x = (radius * Mathf.Cos(rad)) + origin.x;
                     float y = (radius * Mathf.Sin(rad)) + origin.z;
-                    Vector3 position = new Vector3(x, i * height, y);
+                    Vector3 position = new Vector3(x, j * height, y);
 
                     int prefabsIndex = holder[index] == 0 ? 0 : holder[index];
 
                     GameObject go = Instantiate(prefabs[prefabsIndex], position, Quaternion.identity, transform);
                     instantiatedPrefabs.Add(go);
+                    holderGOs[j][i] = go; 
                     index++;
                 }
             }
+
+            return holderGOs;
         }
     }
 }
