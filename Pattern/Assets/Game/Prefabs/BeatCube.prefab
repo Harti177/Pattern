@@ -134,9 +134,10 @@ MonoBehaviour:
   beatType: -1
   xPosition: 0
   yPosition: 0
-  beatCollider: {fileID: 0}
+  beatCollider: {fileID: 2922784110684070791}
   beatNormal: {fileID: 0}
   beatHover: {fileID: 4845717559396550069}
+  animator: {fileID: 2066041729731295444}
 --- !u!65 &2922784110684070791
 BoxCollider:
   m_ObjectHideFlags: 0

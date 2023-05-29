@@ -1,17 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using TMPro;
 
 namespace Harti.Pattern
 {
     public class Game : MonoBehaviour
     {
         public Arrange arrange;
+        public Saber leftSaber;
+        public Saber rightSaber; 
 
         private Beat beatHovered;
         private Saber.HandType beatHoveredHand;
 
-        private Beat[][] beats; 
+        private Beat[][] beats;
+
+        public InputActionReference activateLeftSaber;
+        public InputActionReference activateRightSaber;
+
+        public TextMeshProUGUI fps; 
+
+        private void OnEnable()
+        {
+            leftSaber.onCollisionEnter.AddListener(CheckSaberCollisionEnter);
+            rightSaber.onCollisionEnter.AddListener(CheckSaberCollisionEnter);
+            leftSaber.onCollisionExit.AddListener(CheckSaberCollisionExit);
+            rightSaber.onCollisionExit.AddListener(CheckSaberCollisionExit);
+        }
+
+        private void OnDisable()
+        {
+            leftSaber.onCollisionEnter.RemoveListener(CheckSaberCollisionEnter);
+            rightSaber.onCollisionEnter.RemoveListener(CheckSaberCollisionEnter);
+            leftSaber.onCollisionExit.RemoveListener(CheckSaberCollisionExit);
+            rightSaber.onCollisionExit.RemoveListener(CheckSaberCollisionExit);
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -35,7 +60,25 @@ namespace Harti.Pattern
         // Update is called once per frame
         void Update()
         {
+            if (activateLeftSaber.action.inProgress)
+            {
+                leftSaber.Activate();
+            }
+            else
+            {
+                leftSaber.DeActivate();
+            }
 
+            if (activateRightSaber.action.inProgress)
+            {
+                rightSaber.Activate();
+            }
+            else
+            {
+                rightSaber.DeActivate();
+            }
+
+            fps.text = (Time.frameCount / Time.time).ToString("000"); 
         }
 
         public void CheckSaberCollisionEnter(GameObject go, Saber.HandType handType)

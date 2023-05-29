@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events; 
 
 namespace Harti.Pattern
 {
@@ -14,7 +15,8 @@ namespace Harti.Pattern
 
         public HandType handType;
 
-        public Game game;
+        [HideInInspector] public UnityEvent<GameObject, HandType> onCollisionEnter;
+        [HideInInspector] public UnityEvent<GameObject, HandType> onCollisionExit;
 
         // Start is called before the first frame update
         void Start()
@@ -30,12 +32,22 @@ namespace Harti.Pattern
 
         private void OnTriggerEnter(Collider other)
         {
-            game.CheckSaberCollisionEnter(other.gameObject, handType);
+            onCollisionEnter.Invoke(other.gameObject, handType); 
         }
 
         private void OnTriggerExit(Collider other)
         {
-            game.CheckSaberCollisionExit(other.gameObject, handType);
+            onCollisionExit.Invoke(other.gameObject, handType);
+        }
+
+        public void Activate()
+        {
+            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 5f);
+        }
+
+        public void DeActivate()
+        {
+            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 1f);
         }
     }
 

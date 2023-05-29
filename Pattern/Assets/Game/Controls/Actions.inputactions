@@ -1,0 +1,98 @@
+{
+    "name": "Actions",
+    "maps": [
+        {
+            "name": "Saber",
+            "id": "40db9ea7-476e-43b7-885c-e1c3695374db",
+            "actions": [
+                {
+                    "name": "ActivateLeftSaber",
+                    "type": "Button",
+                    "id": "4dafc1c0-2a68-4e75-8a65-0c76cfe7ab2f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ActivateRightSaber",
+                    "type": "Button",
+                    "id": "da7f4dfe-e390-41ed-8954-d83afce31c0d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "be11bf75-7c74-44b2-9fc3-913dcbce6560",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivateLeftSaber",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "68662a2c-4002-46e0-826f-4747b7fffc45",
+                    "path": "<OculusTouchController>{LeftHand}/gripPressed",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivateLeftSaber",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e551d821-5178-4b0a-91a7-3236f55e4b59",
+                    "path": "<XRController>{LeftHand}/gripPressed",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivateLeftSaber",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2991c448-79aa-4797-9cef-48a87a8a4fbc",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivateRightSaber",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d3364547-6ec2-4d1f-87ef-39977318f3d7",
+                    "path": "<OculusTouchController>{RightHand}/gripPressed",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivateRightSaber",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4f40ec6b-dac2-4289-b7d3-866275465f33",
+                    "path": "<XRController>{RightHand}/gripPressed",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivateRightSaber",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

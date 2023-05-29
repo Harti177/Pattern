@@ -41,18 +41,12 @@ namespace Harti.Pattern
         {
             beatMode = BeatMode.hit;
 
-            beatNormal.SetActive(false);
-            beatHover.SetActive(true);
-
             animator.SetBool("Hover", true);
         }
 
         public void UnHover()
         {
             beatMode = BeatMode.normal;
-
-            beatNormal.SetActive(true);
-            beatHover.SetActive(false);
 
             animator.SetBool("Hover", false);
         }
@@ -62,7 +56,6 @@ namespace Harti.Pattern
             beatMode = BeatMode.smash;
 
             beatNormal.SetActive(false);
-            beatHover.SetActive(false);
             beatCollider.enabled = false; 
         }
     }
