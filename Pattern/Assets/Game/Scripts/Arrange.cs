@@ -56,7 +56,7 @@ namespace Harti.Pattern
                     float rad = Mathf.PI / 180 * (i * (360 / xCount));
                     float x = (radius * Mathf.Cos(rad)) + origin.x;
                     float y = (radius * Mathf.Sin(rad)) + origin.z;
-                    Vector3 position = new Vector3(x, j * height, y);
+                    Vector3 position = new Vector3(x, (j * height) + origin.y, y);
 
                     int prefabsIndex = holder[index] == 0 ? 0 : holder[index];
 

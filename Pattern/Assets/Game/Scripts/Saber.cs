@@ -49,6 +49,10 @@ namespace Harti.Pattern
         {
             GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 1f);
         }
-    }
 
+        public void Lock()
+        {
+            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.blue * 5f);
+        }
+    }
 }
