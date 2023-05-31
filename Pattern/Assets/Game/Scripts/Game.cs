@@ -165,7 +165,8 @@ namespace Harti.Pattern
                                 beatHoveredHand = handType;
                                 beatHovered.Hover();
                                 if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
-                                score.text = points.ToString(); 
+                                score.text = points.ToString();
+                                if (PlayerPrefs.GetInt("HighScore", 0) < points) PlayerPrefs.SetInt("HighScore", points);
                                 beatsSmashedThisRound = new List<Beat>();
                             }
                         }
@@ -399,6 +400,7 @@ namespace Harti.Pattern
                     beatHovered.Hover();
                     if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                     score.text = points.ToString();
+                    if (PlayerPrefs.GetInt("HighScore", 0) < points) PlayerPrefs.SetInt("HighScore", points);
                     beatsSmashedThisRound = new List<Beat>(); 
                 }
 
