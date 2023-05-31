@@ -15,7 +15,8 @@ namespace Harti.Pattern
         private Beat beatHovered;
         private Beat beatPrev;
         private Saber.HandType beatHoveredHand;
-        private bool beatLocked = false; 
+        private bool beatLocked = false;
+        private List<Beat> beatsSmashedThisRound; 
 
         private Beat[][] beats;
 
@@ -23,6 +24,7 @@ namespace Harti.Pattern
         public InputActionReference activateRightSaber;
 
         public TextMeshProUGUI fps; 
+        public TextMeshProUGUI points; 
 
         private void OnEnable()
         {
@@ -142,6 +144,7 @@ namespace Harti.Pattern
                             if (beatLocked)
                             {
                                 beatHovered.Smash();
+                                beatsSmashedThisRound.Add(beatHovered);
                             }
                         }
                     }
@@ -155,6 +158,7 @@ namespace Harti.Pattern
                                 beatHovered = beat;
                                 beatHoveredHand = handType;
                                 beatHovered.Hover();
+                                beatsSmashedThisRound = new List<Beat>();
                             }
                         }
                         else
@@ -180,7 +184,18 @@ namespace Harti.Pattern
 
                                         if (beatLocked && beat.beatType == beatHovered.beatType)
                                         {
+                                            if (beatsSmashedThisRound.Count > 1)
+                                            {
+                                                int yDifferenceBeatsSmashed = beatsSmashedThisRound[0].yPosition - beatsSmashedThisRound[1].yPosition;
+                                                if (!(yDifferenceBeatsSmashed > 0))
+                                                {
+                                                    beatPrev = beat;
+                                                    return; 
+                                                }
+                                            }
+
                                             beat.Smash();
+                                            beatsSmashedThisRound.Add(beat);
                                         }
                                     }
                                     else
@@ -198,7 +213,18 @@ namespace Harti.Pattern
 
                                         if (beatLocked && beat.beatType == beatHovered.beatType)
                                         {
+                                            if (beatsSmashedThisRound.Count > 1)
+                                            {
+                                                int yDifferenceBeatsSmashed = beatsSmashedThisRound[0].yPosition - beatsSmashedThisRound[1].yPosition;
+                                                if (yDifferenceBeatsSmashed > 0)
+                                                {
+                                                    beatPrev = beat;
+                                                    return;
+                                                }
+                                            }
+
                                             beat.Smash();
+                                            beatsSmashedThisRound.Add(beat);
                                         }
                                     }
                                 }
@@ -225,7 +251,19 @@ namespace Harti.Pattern
 
                                             if (beatLocked && beat.beatType == beatHovered.beatType)
                                             {
+                                                if (beatsSmashedThisRound.Count > 1)
+                                                {
+                                                    if ((beatsSmashedThisRound[0].xPosition != 0 && beatsSmashedThisRound[0].xPosition != beats[0].Length - 1 && !(beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition < 0))
+                                                        || (beatsSmashedThisRound[0].xPosition == 0 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition != -1)
+                                                        || (beatsSmashedThisRound[0].xPosition == beats[0].Length - 1 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition == 1))
+                                                    {
+                                                        beatPrev = beat;
+                                                        return;
+                                                    }
+                                                }
+
                                                 beat.Smash();
+                                                beatsSmashedThisRound.Add(beat);
                                             }
                                         }
                                         else
@@ -252,7 +290,19 @@ namespace Harti.Pattern
 
                                             if (beatLocked && beat.beatType == beatHovered.beatType)
                                             {
+                                                if (beatsSmashedThisRound.Count > 1)
+                                                {
+                                                    if ((beatsSmashedThisRound[0].xPosition != 0 && beatsSmashedThisRound[0].xPosition != beats[0].Length - 1 && !(beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition < 0))
+                                                        || (beatsSmashedThisRound[0].xPosition == 0 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition != -1)
+                                                        || (beatsSmashedThisRound[0].xPosition == beats[0].Length - 1 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition == 1))
+                                                    {
+                                                        beatPrev = beat;
+                                                        return;
+                                                    }
+                                                }
+
                                                 beat.Smash();
+                                                beatsSmashedThisRound.Add(beat);
                                             }
                                         }
                                     }
@@ -274,7 +324,19 @@ namespace Harti.Pattern
 
                                             if (beatLocked && beat.beatType == beatHovered.beatType)
                                             {
+                                                if (beatsSmashedThisRound.Count > 1)
+                                                {
+                                                    if ((beatsSmashedThisRound[0].xPosition != 0 && beatsSmashedThisRound[0].xPosition != beats[0].Length - 1 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition < 0)
+                                                        || (beatsSmashedThisRound[0].xPosition == 0 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition == -1)
+                                                        || (beatsSmashedThisRound[0].xPosition == beats[0].Length - 1 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition != 1))
+                                                    {
+                                                        beatPrev = beat;
+                                                        return;
+                                                    }
+                                                }
+
                                                 beat.Smash();
+                                                beatsSmashedThisRound.Add(beat);
                                             }
                                         }
                                         else
@@ -301,7 +363,19 @@ namespace Harti.Pattern
 
                                             if (beatLocked && beat.beatType == beatHovered.beatType)
                                             {
+                                                if (beatsSmashedThisRound.Count > 1)
+                                                {
+                                                    if ((beatsSmashedThisRound[0].xPosition != 0 && beatsSmashedThisRound[0].xPosition != beats[0].Length - 1 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition < 0)
+                                                        || (beatsSmashedThisRound[0].xPosition == 0 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition == -1)
+                                                        || (beatsSmashedThisRound[0].xPosition == beats[0].Length - 1 && beatsSmashedThisRound[0].xPosition - beatsSmashedThisRound[1].xPosition != 1))
+                                                    {
+                                                        beatPrev = beat;
+                                                        return;
+                                                    }
+                                                }
+
                                                 beat.Smash();
+                                                beatsSmashedThisRound.Add(beat);
                                             }
                                         }
                                     }
@@ -315,6 +389,7 @@ namespace Harti.Pattern
                     beatHovered = beat;
                     beatHoveredHand = handType;
                     beatHovered.Hover();
+                    beatsSmashedThisRound = new List<Beat>(); 
                 }
 
                 beatPrev = beat; 
