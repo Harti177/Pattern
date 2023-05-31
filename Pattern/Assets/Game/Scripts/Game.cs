@@ -37,7 +37,7 @@ namespace Harti.Pattern
             rightSaber.onCollisionExit.AddListener(CheckSaberCollisionExit);
 
             scoreHigh.text = PlayerPrefs.GetInt("HighScore", 0).ToString();
-            scoreHigh.text = "0";
+            score.text = "0";
         }
 
         private void OnDisable()
@@ -166,7 +166,11 @@ namespace Harti.Pattern
                                 beatHovered.Hover();
                                 if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                                 score.text = points.ToString();
-                                if (PlayerPrefs.GetInt("HighScore", 0) < points) PlayerPrefs.SetInt("HighScore", points);
+                                if (points > PlayerPrefs.GetInt("HighScore", 0))
+                                {
+                                    PlayerPrefs.SetInt("HighScore", points);
+                                    scoreHigh.text = PlayerPrefs.GetInt("HighScore", 0).ToString();
+                                }
                                 beatsSmashedThisRound = new List<Beat>();
                             }
                         }
@@ -400,7 +404,11 @@ namespace Harti.Pattern
                     beatHovered.Hover();
                     if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                     score.text = points.ToString();
-                    if (PlayerPrefs.GetInt("HighScore", 0) < points) PlayerPrefs.SetInt("HighScore", points);
+                    if (points > PlayerPrefs.GetInt("HighScore", 0))
+                    {
+                        PlayerPrefs.SetInt("HighScore", points);
+                        scoreHigh.text = PlayerPrefs.GetInt("HighScore", 0).ToString();
+                    }
                     beatsSmashedThisRound = new List<Beat>(); 
                 }
 
