@@ -39,14 +39,14 @@ namespace Harti.Pattern
 
         public void Hover()
         {
-            beatMode = BeatMode.hit;
+            if (beatMode != BeatMode.smash) beatMode = BeatMode.hit;
 
             animator.SetBool("Hover", true);
         }
 
         public void UnHover()
         {
-            beatMode = BeatMode.normal;
+            if(beatMode != BeatMode.smash) beatMode = BeatMode.normal;
 
             animator.SetBool("Hover", false);
         }
@@ -56,7 +56,7 @@ namespace Harti.Pattern
             beatMode = BeatMode.smash;
 
             beatNormal.SetActive(false);
-            beatCollider.enabled = false; 
+            //beatCollider.enabled = false; 
         }
     }
 }

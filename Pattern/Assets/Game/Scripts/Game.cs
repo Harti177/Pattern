@@ -13,6 +13,7 @@ namespace Harti.Pattern
         public Saber rightSaber; 
 
         private Beat beatHovered;
+        private Beat beatPrev;
         private Saber.HandType beatHoveredHand;
         private bool beatLocked = false; 
 
@@ -76,12 +77,15 @@ namespace Harti.Pattern
             else
             {
                 leftSaber.DeActivate();
-                if (beatLocked && beatHoveredHand == Saber.HandType.left)
+                if (beatHoveredHand == Saber.HandType.left)
                 {
-                    beatHovered.UnHover();
-                    beatHovered = null;
+                    if (beatLocked)
+                    {
+                        beatHovered.UnHover();
+                        beatHovered = null;
+                    }
+                    beatLocked = false;
                 }
-                beatLocked = false;
             }
 
             if (activateRightSaber.action.inProgress)
@@ -99,12 +103,15 @@ namespace Harti.Pattern
             else
             {
                 rightSaber.DeActivate();
-                if (beatLocked && beatHoveredHand == Saber.HandType.right)
+                if(beatHoveredHand == Saber.HandType.right)
                 {
-                    beatHovered.UnHover();
-                    beatHovered = null;
+                    if (beatLocked)
+                    {
+                        beatHovered.UnHover();
+                        beatHovered = null;
+                    }
+                    beatLocked = false;
                 }
-                beatLocked = false;
             }
 
             fps.text = (Time.frameCount / Time.time).ToString("000"); 
@@ -116,7 +123,13 @@ namespace Harti.Pattern
             {
                 Beat beat = go.GetComponent<Beat>();
 
-                if(beatHovered != null)
+                if (beat.beatMode == Beat.BeatMode.smash)
+                {
+                    beatPrev = beat;
+                    return;
+                }
+
+                if (beatHovered != null)
                 {
                     if(beatHovered == beat)
                     {
@@ -156,10 +169,11 @@ namespace Harti.Pattern
                                     {
                                         int length = Mathf.Abs(yDifference);
                                         int i = beatHovered.xPosition; 
-                                        for (int j = beatHovered.yPosition; j > beatHovered.yPosition - (length - 1); j--)
+                                        for (int j = beatHovered.yPosition; j > beatHovered.yPosition - length; j--)
                                         {
                                             if (beats[j][i].beatMode != Beat.BeatMode.smash)
                                             {
+                                                beatPrev = beat;
                                                 return;
                                             }
                                         }
@@ -173,10 +187,11 @@ namespace Harti.Pattern
                                     {
                                         int length = Mathf.Abs(yDifference);
                                         int i = beatHovered.xPosition;
-                                        for (int j = beatHovered.yPosition; j > beatHovered.yPosition + (length-1); j++)
+                                        for (int j = beatHovered.yPosition; j < beatHovered.yPosition + length; j++)
                                         {
                                             if (beats[j][i].beatMode != Beat.BeatMode.smash)
                                             {
+                                                beatPrev = beat;
                                                 return;
                                             }
                                         }
@@ -188,42 +203,106 @@ namespace Harti.Pattern
                                     }
                                 }
 
-                                if(beatHovered.yPosition == beat.yPosition)
+                                if (beatHovered.yPosition == beat.yPosition)
                                 {
-                                    int xDifference = beatHovered.xPosition - beat.xPosition;
-
-                                    if (xDifference > 0)
+                                    if((beatPrev.xPosition != 0 && beatPrev.xPosition != beats[0].Length - 1 && beatPrev.xPosition - beat.xPosition < 0)
+                                        || (beatPrev.xPosition == 0 && beatPrev.xPosition - beat.xPosition == -1) 
+                                        || (beatPrev.xPosition == beats[0].Length - 1 && beatPrev.xPosition - beat.xPosition != 1))
                                     {
-                                        int length = Mathf.Abs(xDifference);
-                                        int j = beatHovered.yPosition;
-                                        for (int i = beatHovered.xPosition; i > beatHovered.xPosition - (length - 1); i--)
+                                        if (beat.xPosition > beatHovered.xPosition && beat.xPosition < beats[0].Length)
                                         {
-                                            if (beats[j][i].beatMode != Beat.BeatMode.smash)
+                                            int xDifference = beatHovered.xPosition - beat.xPosition;
+                                            int length = Mathf.Abs(xDifference);
+                                            int j = beatHovered.yPosition;
+                                            for (int i = beatHovered.xPosition; i < beatHovered.xPosition + length; i++)
                                             {
-                                                return;
+                                                if (beats[j][i].beatMode != Beat.BeatMode.smash)
+                                                {
+                                                    beatPrev = beat;
+                                                    return;
+                                                }
+                                            }
+
+                                            if (beatLocked && beat.beatType == beatHovered.beatType)
+                                            {
+                                                beat.Smash();
                                             }
                                         }
-
-                                        if (beatLocked && beat.beatType == beatHovered.beatType)
+                                        else
                                         {
-                                            beat.Smash();
+                                            for (int i = beatHovered.xPosition; i < beats[0].Length; i++)
+                                            {
+                                                int j = beatHovered.yPosition;
+                                                if (beats[j][i].beatMode != Beat.BeatMode.smash)
+                                                {
+                                                    beatPrev = beat;
+                                                    return;
+                                                }
+                                            }
+
+                                            for (int i = 0; i < beat.xPosition; i++)
+                                            {
+                                                int j = beatHovered.yPosition;
+                                                if (beats[j][i].beatMode != Beat.BeatMode.smash)
+                                                {
+                                                    beatPrev = beat;
+                                                    return;
+                                                }
+                                            }
+
+                                            if (beatLocked && beat.beatType == beatHovered.beatType)
+                                            {
+                                                beat.Smash();
+                                            }
                                         }
                                     }
                                     else
                                     {
-                                        int length = Mathf.Abs(xDifference);
-                                        int j = beatHovered.yPosition;
-                                        for (int i = beatHovered.xPosition; i > beatHovered.xPosition + (length - 1); i++)
+                                        if (beat.xPosition < beatHovered.xPosition && beat.xPosition >= 0)
                                         {
-                                            if (beats[j][i].beatMode != Beat.BeatMode.smash)
+                                            int xDifference = beatHovered.xPosition - beat.xPosition;
+                                            int length = Mathf.Abs(xDifference);
+                                            int j = beatHovered.yPosition;
+                                            for (int i = beatHovered.xPosition; i > beatHovered.xPosition - length; i--)
                                             {
-                                                return;
+                                                if (beats[j][i].beatMode != Beat.BeatMode.smash)
+                                                {
+                                                    beatPrev = beat;
+                                                    return;
+                                                }
+                                            }
+
+                                            if (beatLocked && beat.beatType == beatHovered.beatType)
+                                            {
+                                                beat.Smash();
                                             }
                                         }
-
-                                        if (beatLocked && beat.beatType == beatHovered.beatType)
+                                        else
                                         {
-                                            beat.Smash();
+                                            for (int i = beatHovered.xPosition; i >= 0; i--)
+                                            {
+                                                int j = beatHovered.yPosition;
+                                                if (beats[j][i].beatMode != Beat.BeatMode.smash)
+                                                {
+                                                    beatPrev = beat;
+                                                    return;
+                                                }
+                                            }
+
+                                            for (int i = beats[0].Length - 1; i > beat.xPosition; i--)
+                                            {
+                                                int j = beatHovered.yPosition;
+                                                if (beats[j][i].beatMode != Beat.BeatMode.smash)
+                                                {
+                                                    beatPrev = beat;
+                                                    return;
+                                                }
+                                            }
+
+                                            if (beatLocked && beat.beatType == beatHovered.beatType)
+                                            {
+                                                beat.Smash();
+                                            }
                                         }
                                     }
                                 }
@@ -237,6 +316,8 @@ namespace Harti.Pattern
                     beatHoveredHand = handType;
                     beatHovered.Hover();
                 }
+
+                beatPrev = beat; 
             }
         }
 
