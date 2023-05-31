@@ -29,6 +29,8 @@ namespace Harti.Pattern
         public TextMeshProUGUI score;
         public TextMeshProUGUI scoreHigh;
 
+        public LineRenderer lineRenderer;
+
         private void OnEnable()
         {
             leftSaber.onCollisionEnter.AddListener(CheckSaberCollisionEnter);
@@ -75,6 +77,8 @@ namespace Harti.Pattern
                 if(beatHovered != null && beatHoveredHand == Saber.HandType.left)
                 {
                     beatLocked = true;
+                    lineRenderer.enabled = true;
+                    lineRenderer.SetPositions(new Vector3[] { leftSaber.tip.position, beatHovered.transform.position });
                     leftSaber.Lock();
                 }
                 else
@@ -92,6 +96,7 @@ namespace Harti.Pattern
                         beatHovered.UnHover();
                         beatHovered = null;
                     }
+                    lineRenderer.enabled = false;
                     beatLocked = false;
                 }
             }
@@ -101,6 +106,8 @@ namespace Harti.Pattern
                 if (beatHovered != null && beatHoveredHand == Saber.HandType.right)
                 {
                     beatLocked = true;
+                    lineRenderer.enabled = true;
+                    lineRenderer.SetPositions(new Vector3[] { rightSaber.tip.position, beatHovered.transform.position });
                     rightSaber.Lock(); 
                 }
                 else
@@ -118,6 +125,7 @@ namespace Harti.Pattern
                         beatHovered.UnHover();
                         beatHovered = null;
                     }
+                    lineRenderer.enabled = false;
                     beatLocked = false;
                 }
             }

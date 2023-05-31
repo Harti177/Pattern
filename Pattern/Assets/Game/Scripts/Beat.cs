@@ -23,7 +23,9 @@ namespace Harti.Pattern
         public GameObject beatNormal;
         public GameObject beatHover;
 
-        public Animator animator; 
+        public Animator animator;
+
+        public LineRenderer lineRenderer; 
 
         // Start is called before the first frame update
         void Start()
