@@ -23,8 +23,11 @@ namespace Harti.Pattern
         public InputActionReference activateLeftSaber;
         public InputActionReference activateRightSaber;
 
+        private int points = 0;
+
         public TextMeshProUGUI fps; 
-        public TextMeshProUGUI points; 
+        public TextMeshProUGUI score;
+        public TextMeshProUGUI scoreHigh;
 
         private void OnEnable()
         {
@@ -32,6 +35,9 @@ namespace Harti.Pattern
             rightSaber.onCollisionEnter.AddListener(CheckSaberCollisionEnter);
             leftSaber.onCollisionExit.AddListener(CheckSaberCollisionExit);
             rightSaber.onCollisionExit.AddListener(CheckSaberCollisionExit);
+
+            scoreHigh.text = PlayerPrefs.GetInt("HighScore", 0).ToString();
+            scoreHigh.text = "0";
         }
 
         private void OnDisable()
@@ -158,6 +164,8 @@ namespace Harti.Pattern
                                 beatHovered = beat;
                                 beatHoveredHand = handType;
                                 beatHovered.Hover();
+                                if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                                score.text = points.ToString(); 
                                 beatsSmashedThisRound = new List<Beat>();
                             }
                         }
@@ -389,6 +397,8 @@ namespace Harti.Pattern
                     beatHovered = beat;
                     beatHoveredHand = handType;
                     beatHovered.Hover();
+                    if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                    score.text = points.ToString();
                     beatsSmashedThisRound = new List<Beat>(); 
                 }
 

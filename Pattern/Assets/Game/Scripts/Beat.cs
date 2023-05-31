@@ -42,6 +42,8 @@ namespace Harti.Pattern
             if (beatMode != BeatMode.smash) beatMode = BeatMode.hit;
 
             animator.SetBool("Hover", true);
+
+            GameObject.Find("HoverSound").GetComponent<AudioSource>().Play();
         }
 
         public void UnHover()
@@ -49,6 +51,8 @@ namespace Harti.Pattern
             if(beatMode != BeatMode.smash) beatMode = BeatMode.normal;
 
             animator.SetBool("Hover", false);
+
+            GameObject.Find("UnHoverSound").GetComponent<AudioSource>().Play();
         }
 
         public void Smash()
@@ -57,6 +61,8 @@ namespace Harti.Pattern
 
             beatNormal.SetActive(false);
             //beatCollider.enabled = false; 
+
+            GameObject.Find("SmashSound").GetComponent<AudioSource>().Play();
         }
     }
 }
