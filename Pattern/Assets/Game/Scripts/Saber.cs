@@ -44,17 +44,17 @@ namespace Harti.Pattern
 
         public void Activate()
         {
-            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 2f);
+            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 1.5f);
         }
 
         public void DeActivate()
         {
-            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 1f);
+            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 0.2f);
         }
 
         public void Lock()
         {
-            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", new Color(0.80f, 0.40f, 0f) * 2f);
+            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", new Color(0.80f, 0.40f, 0f) * 1.5f);
         }
     }
 }
