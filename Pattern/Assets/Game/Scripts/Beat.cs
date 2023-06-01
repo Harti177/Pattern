@@ -62,6 +62,8 @@ namespace Harti.Pattern
 
         public void Smash(Vector3 position, Vector3 direction)
         {
+            if (beatMode == BeatMode.smash) return;
+
             beatMode = BeatMode.smash;
 
             beatNormal.SetActive(false);
@@ -71,22 +73,36 @@ namespace Harti.Pattern
             beatSmashedEffectGO = Instantiate(beatSmashedEffect, transform.position, Quaternion.identity);
 
             GameObject beatSmashedGO = Instantiate(beatSmashed, transform.position, Quaternion.identity);
-            GameObject[] hulls = beatSmashedGO.SliceInstantiate(position, direction, beatSmashed.GetComponent<MeshRenderer>().material);
+            hulls = beatSmashedGO.SliceInstantiate(position, direction, beatSmashed.GetComponent<MeshRenderer>().material);
             Destroy(beatSmashedGO);
 
-            hulls[0].AddComponent<MeshCollider>().convex = true;
-            hulls[0].AddComponent<Rigidbody>().AddExplosionForce(200f, position, 1);
-            hulls[1].AddComponent<MeshCollider>().convex = true;
-            hulls[1].AddComponent<Rigidbody>().AddExplosionForce(200f, position, 1);
-            StartCoroutine(DestroyHulls());
+            if(hulls != null && hulls.Length > 0)
+            {
+                hulls[0].AddComponent<MeshCollider>().convex = true;
+                hulls[0].AddComponent<Rigidbody>().AddExplosionForce(200f, position, 1);
+                if(hulls.Length > 1) hulls[1].AddComponent<MeshCollider>().convex = true;
+                if (hulls.Length > 1)  hulls[1].AddComponent<Rigidbody>().AddExplosionForce(200f, position, 1);
+                StartCoroutine(DestroyHulls());
+            }
         }
 
         private IEnumerator DestroyHulls()
         {
             yield return new WaitForSeconds(2f);
 
-            Destroy(hulls[0]);
-            Destroy(hulls[1]);
+            List<GameObject> gos = new List<GameObject>();
+
+            for(int i = 0; i < hulls.Length; i++)
+            {
+                if(hulls[i] != null)
+                    gos.Add(hulls[i]);
+            }
+
+            foreach (GameObject go in gos)
+            {
+                Destroy(go);
+            }
+
             Destroy(beatSmashedEffectGO);
         }
     }
