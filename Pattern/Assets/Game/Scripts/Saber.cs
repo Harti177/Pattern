@@ -15,7 +15,7 @@ namespace Harti.Pattern
 
         public HandType handType;
 
-        [HideInInspector] public UnityEvent<GameObject, HandType> onCollisionEnter;
+        [HideInInspector] public UnityEvent<GameObject, HandType, Vector3, Vector3> onCollisionEnter;
         [HideInInspector] public UnityEvent<GameObject, HandType> onCollisionExit;
 
         public Transform tip; 
@@ -29,12 +29,12 @@ namespace Harti.Pattern
         // Update is called once per frame
         void Update()
         {
-            //transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
+
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            onCollisionEnter.Invoke(other.gameObject, handType); 
+            onCollisionEnter.Invoke(other.gameObject, handType, transform.position, transform.right); 
         }
 
         private void OnTriggerExit(Collider other)
@@ -49,7 +49,7 @@ namespace Harti.Pattern
 
         public void DeActivate()
         {
-            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 0.2f);
+            GetComponentInChildren<MeshRenderer>().material.SetColor("_EmissionColor", Color.white * 0.5f);
         }
 
         public void Lock()

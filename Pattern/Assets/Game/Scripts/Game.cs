@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using EzySlice;
 
 namespace Harti.Pattern
 {
@@ -133,7 +134,7 @@ namespace Harti.Pattern
             fps.text = (Time.frameCount / Time.time).ToString("000"); 
         }
 
-        public void CheckSaberCollisionEnter(GameObject go, Saber.HandType handType)
+        public void CheckSaberCollisionEnter(GameObject go, Saber.HandType handType, Vector3 position, Vector3 direction)
         {
             if (go.GetComponent<Beat>() != null)
             {
@@ -157,7 +158,7 @@ namespace Harti.Pattern
                         {
                             if (beatLocked)
                             {
-                                beatHovered.Smash();
+                                beatHovered.Smash(position, direction);
                                 beatsSmashedThisRound.Add(beatHovered);
                             }
                         }
@@ -215,7 +216,7 @@ namespace Harti.Pattern
                                                 }
                                             }
 
-                                            beat.Smash();
+                                            beat.Smash(position, direction);
                                             beatsSmashedThisRound.Add(beat);
                                         }
                                     }
@@ -244,7 +245,7 @@ namespace Harti.Pattern
                                                 }
                                             }
 
-                                            beat.Smash();
+                                            beat.Smash(position, direction);
                                             beatsSmashedThisRound.Add(beat);
                                         }
                                     }
@@ -283,7 +284,7 @@ namespace Harti.Pattern
                                                     }
                                                 }
 
-                                                beat.Smash();
+                                                beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
                                             }
                                         }
@@ -322,7 +323,7 @@ namespace Harti.Pattern
                                                     }
                                                 }
 
-                                                beat.Smash();
+                                                beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
                                             }
                                         }
@@ -356,7 +357,7 @@ namespace Harti.Pattern
                                                     }
                                                 }
 
-                                                beat.Smash();
+                                                beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
                                             }
                                         }
@@ -395,7 +396,7 @@ namespace Harti.Pattern
                                                     }
                                                 }
 
-                                                beat.Smash();
+                                                beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
                                             }
                                         }
@@ -417,7 +418,7 @@ namespace Harti.Pattern
                         PlayerPrefs.SetInt("HighScore", points);
                         scoreHigh.text = PlayerPrefs.GetInt("HighScore", 0).ToString();
                     }
-                    beatsSmashedThisRound = new List<Beat>(); 
+                    beatsSmashedThisRound = new List<Beat>();
                 }
 
                 beatPrev = beat; 
