@@ -11,8 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Scenes/Game.unity
     guid: 07661fdc34a626e4d998d05b1929ec16
+  - enabled: 0
+    path: Assets/Oculus/SampleFramework/Usage/Passthrough.unity
+    guid: 58e5fc2486c774a4e88ac76261268d52
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 72343a6dbd2b91f418a4faf3df3bacb4,
       type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 85f6715d02070fb48a1ddb98b8ade951,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: c97ae42327d04fa45a6f4e65acb929a7,
       type: 2}
