@@ -54,7 +54,7 @@ MonoBehaviour:
   beatNormal: {fileID: 0}
   beatSmashed: {fileID: 1898411460465355984, guid: a686cb918f4dd68499d6387a85412ab8,
     type: 3}
-  beatSmashedEffect: {fileID: 2942762080316760564, guid: 004730b96c8c27445952385c786d8fa4,
+  beatSmashedEffect: {fileID: 801520139085107374, guid: daaf62b85c3720e43a27548f34a5a394,
     type: 3}
   animator: {fileID: 2066041729731295444}
 --- !u!65 &2922784110684070791

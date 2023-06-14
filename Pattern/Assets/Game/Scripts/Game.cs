@@ -38,7 +38,10 @@ namespace Harti.Pattern
         public TextMeshProUGUI counterText1;
         public float counter;
 
-        public LineRenderer lineRenderer;
+        //public LineRenderer lineRenderer;
+        public GameObject lockLine;
+        public GameObject lockLineStart;
+        public GameObject lockLineEnd;
 
         private bool gameIsActive = false; 
         private int currGameId = -1;
@@ -90,7 +93,7 @@ namespace Harti.Pattern
             beatLocked = false;
             beatHovered = null;
             beatPrev = null;
-            lineRenderer.enabled = false;
+            lockLine.SetActive(false);
 
             gameIsActive = false;
             currGameId = -1;
@@ -154,7 +157,7 @@ namespace Harti.Pattern
             beatLocked = false;
             beatHovered = null;
             beatPrev = null;
-            lineRenderer.enabled = false;
+            lockLine.SetActive(false);
 
             GameObject[][] beatsGOs = arranges[gameId].ArrangeGame();
             beats = new Beat[beatsGOs.Length][];
@@ -207,8 +210,9 @@ namespace Harti.Pattern
                     if (beatHovered != null && beatHoveredHand == Saber.HandType.left)
                     {
                         beatLocked = true;
-                        lineRenderer.enabled = true;
-                        lineRenderer.SetPositions(new Vector3[] { leftSaber.tip.position, beatHovered.transform.position });
+                        lockLine.SetActive(true);
+                        lockLineStart.transform.position = leftSaber.tip.position;
+                        lockLineEnd.transform.position = beatHovered.transform.position;
                         leftSaber.Lock();
                     }
                     else
@@ -235,7 +239,7 @@ namespace Harti.Pattern
                             }
                             beatsSmashedThisRound = new List<Beat>();
                         }
-                        lineRenderer.enabled = false;
+                        lockLine.SetActive(false);
                         beatLocked = false;
                     }
                 }
@@ -245,8 +249,9 @@ namespace Harti.Pattern
                     if (beatHovered != null && beatHoveredHand == Saber.HandType.right)
                     {
                         beatLocked = true;
-                        lineRenderer.enabled = true;
-                        lineRenderer.SetPositions(new Vector3[] { rightSaber.tip.position, beatHovered.transform.position });
+                        lockLine.SetActive(true);
+                        lockLineStart.transform.position = rightSaber.tip.position;
+                        lockLineEnd.transform.position = beatHovered.transform.position;
                         rightSaber.Lock();
                     }
                     else
@@ -273,7 +278,7 @@ namespace Harti.Pattern
                             }
                             beatsSmashedThisRound = new List<Beat>();
                         }
-                        lineRenderer.enabled = false;
+                        lockLine.SetActive(false);
                         beatLocked = false;
                     }
                 }
