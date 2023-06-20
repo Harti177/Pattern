@@ -75,7 +75,7 @@ namespace Harti.Pattern
         {
             for (int i = 0; i < highScores.Length; i++)
             {
-                highScores[i].text = PlayerPrefs.GetInt("PatternHighScore0106" + i, 0).ToString();
+                highScores[i].text = PlayerPrefs.GetInt("PatternHighScore2006" + i, 0).ToString();
             }
         }
 
@@ -106,6 +106,8 @@ namespace Harti.Pattern
 
             leftRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = true;
             rightRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = true;
+
+            points = 0; 
         }
 
         private void DestroyAllBeats()
@@ -175,11 +177,13 @@ namespace Harti.Pattern
             }
             counter = 0;
             currGameId = gameId;
-            scoreHigh.text = "HighestScore\n" + PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0).ToString();
+            scoreHigh.text = "HighestScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
             score.text = "Score\n" + "0";
 
             leftRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = false;
             rightRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = false;
+
+            points = 0;
         }
 
         // Update is called once per frame
@@ -232,10 +236,10 @@ namespace Harti.Pattern
                             if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                             beatsSmashed.AddRange(beatsSmashedThisRound);
                             score.text = "Score\n" + points.ToString();
-                            if (points > PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0))
+                            if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
                             {
-                                PlayerPrefs.SetInt("PatternHighScore0106" + currGameId, points);
-                                scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0).ToString();
+                                PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
+                                scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
                             }
                             beatsSmashedThisRound = new List<Beat>();
                         }
@@ -271,10 +275,10 @@ namespace Harti.Pattern
                             if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                             beatsSmashed.AddRange(beatsSmashedThisRound);
                             score.text = "Score\n" + points.ToString();
-                            if (points > PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0))
+                            if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
                             {
-                                PlayerPrefs.SetInt("PatternHighScore0106" + currGameId, points);
-                                scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0).ToString();
+                                PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
+                                scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
                             }
                             beatsSmashedThisRound = new List<Beat>();
                         }
@@ -330,10 +334,10 @@ namespace Harti.Pattern
                                 if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                                 beatsSmashed.AddRange(beatsSmashedThisRound);
                                 score.text = "Score\n" + points.ToString();
-                                if (points > PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0))
+                                if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
                                 {
-                                    PlayerPrefs.SetInt("PatternHighScore0106" + currGameId, points);
-                                    scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0).ToString();
+                                    PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
+                                    scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
                                 }
                                 beatsSmashedThisRound = new List<Beat>();
                             }
@@ -575,10 +579,10 @@ namespace Harti.Pattern
                     if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                     beatsSmashed.AddRange(beatsSmashedThisRound);
                     score.text = "Score\n" + points.ToString();
-                    if (points > PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0))
+                    if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
                     {
-                        PlayerPrefs.SetInt("PatternHighScore0106" + currGameId, points);
-                        scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0).ToString();
+                        PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
+                        scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
                     }
                     beatsSmashedThisRound = new List<Beat>();
                 }
@@ -606,10 +610,10 @@ namespace Harti.Pattern
                                 if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                                 beatsSmashed.AddRange(beatsSmashedThisRound);
                                 score.text = "Score\n" + points.ToString();
-                                if (points > PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0))
+                                if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
                                 {
-                                    PlayerPrefs.SetInt("PatternHighScore0106" + currGameId, points);
-                                    scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore0106" + currGameId, 0).ToString();
+                                    PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
+                                    scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
                                 }
                                 beatsSmashedThisRound = new List<Beat>();
                             }
