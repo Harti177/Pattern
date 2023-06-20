@@ -233,7 +233,18 @@ namespace Harti.Pattern
                         {
                             beatHovered.UnHover();
                             beatHovered = null;
-                            if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                            if (beatsSmashedThisRound != null) 
+                            {
+                                if(beatsSmashedThisRound.Count == 1)
+                                {
+                                    ExitGame();
+                                    failedText.text = "Failed! Try again :)";
+                                    failedText.gameObject.SetActive(true);
+                                    return; 
+                                }
+                                points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                            } 
+
                             beatsSmashed.AddRange(beatsSmashedThisRound);
                             score.text = "Score\n" + points.ToString();
                             if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
@@ -272,7 +283,17 @@ namespace Harti.Pattern
                         {
                             beatHovered.UnHover();
                             beatHovered = null;
-                            if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                            if (beatsSmashedThisRound != null)
+                            {
+                                if (beatsSmashedThisRound.Count == 1)
+                                {
+                                    ExitGame();
+                                    failedText.text = "Failed! Try again :)";
+                                    failedText.gameObject.SetActive(true);
+                                    return;
+                                }
+                                points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                            }
                             beatsSmashed.AddRange(beatsSmashedThisRound);
                             score.text = "Score\n" + points.ToString();
                             if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
@@ -331,7 +352,17 @@ namespace Harti.Pattern
                                 beatHovered = beat;
                                 beatHoveredHand = handType;
                                 beatHovered.Hover();
-                                if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                                if (beatsSmashedThisRound != null)
+                                {
+                                    if (beatsSmashedThisRound.Count == 1)
+                                    {
+                                        ExitGame();
+                                        failedText.text = "Failed! Try again :)";
+                                        failedText.gameObject.SetActive(true);
+                                        return;
+                                    }
+                                    points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                                }
                                 beatsSmashed.AddRange(beatsSmashedThisRound);
                                 score.text = "Score\n" + points.ToString();
                                 if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
@@ -576,7 +607,17 @@ namespace Harti.Pattern
                     beatHovered = beat;
                     beatHoveredHand = handType;
                     beatHovered.Hover();
-                    if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                    if (beatsSmashedThisRound != null)
+                    {
+                        if (beatsSmashedThisRound.Count == 1)
+                        {
+                            ExitGame();
+                            failedText.text = "Failed! Try again :)";
+                            failedText.gameObject.SetActive(true);
+                            return;
+                        }
+                        points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                    }
                     beatsSmashed.AddRange(beatsSmashedThisRound);
                     score.text = "Score\n" + points.ToString();
                     if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
@@ -607,7 +648,17 @@ namespace Harti.Pattern
                             {
                                 beatHovered.UnHover();
                                 beatHovered = null;
-                                if (beatsSmashedThisRound != null) points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                                if (beatsSmashedThisRound != null)
+                                {
+                                    if (beatsSmashedThisRound.Count == 1)
+                                    {
+                                        ExitGame();
+                                        failedText.text = "Failed! Try again :)";
+                                        failedText.gameObject.SetActive(true);
+                                        return;
+                                    }
+                                    points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
+                                }
                                 beatsSmashed.AddRange(beatsSmashedThisRound);
                                 score.text = "Score\n" + points.ToString();
                                 if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
