@@ -11,7 +11,8 @@ namespace Harti.Pattern
         {
             normal,
             hit,
-            smash
+            smash,
+            inactive
         }
 
         [HideInInspector] public BeatMode beatMode;
@@ -28,7 +29,9 @@ namespace Harti.Pattern
         public Animator animator;
 
         private GameObject[] hulls; 
-        private GameObject beatSmashedEffectGO; 
+        private GameObject beatSmashedEffectGO;
+
+        public float counter;
 
         // Start is called before the first frame update
         void Start()
@@ -39,7 +42,17 @@ namespace Harti.Pattern
         // Update is called once per frame
         void Update()
         {
+            counter += Time.deltaTime;
 
+            if (counter > 50)
+            {
+                if (beatMode == BeatMode.normal)
+                {
+                    beatMode = BeatMode.inactive;
+                    beatNormal.SetActive(false);
+                    GameObject beatSmashedGO = Instantiate(beatSmashed, transform.position, Quaternion.identity);
+                }
+            }
         }
 
         public void Hover()

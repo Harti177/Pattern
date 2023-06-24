@@ -53,7 +53,9 @@ namespace Harti.Pattern
         public TextMeshProUGUI failedText;
 
         public GameObject leftRayInteractor;
-        public GameObject rightRayInteractor; 
+        public GameObject rightRayInteractor;
+
+        int gameFactor = 0; 
 
         private void OnEnable()
         {
@@ -136,6 +138,7 @@ namespace Harti.Pattern
 
         public void StartGame(int gameId)
         {
+            gameFactor = 0;
             beatsSmashedThisRound = new List<Beat>();
             beatsSmashed = new List<Beat>(); 
             gameUi.GetComponent<CanvasGroup>().interactable = (true);
@@ -184,6 +187,7 @@ namespace Harti.Pattern
             rightRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = false;
 
             points = 0;
+            gameFactor++;
         }
 
         // Update is called once per frame
@@ -191,15 +195,15 @@ namespace Harti.Pattern
         {
             if (gameIsActive)
             {
-                if(beatsSmashed.Count == 72)
+                /*if(beatsSmashed.Count == 72)
                 {
                     ExitGame();
                     failedText.text = "Awesome! Play again :)"; 
                     failedText.gameObject.SetActive(true);
-                }
+                }*/
 
                 counter += Time.deltaTime;
-                counterText.text = (10 - counter).ToString("0");
+                /*counterText.text = (10 - counter).ToString("0");
                 counterText1.text = "Smashed " + beatsSmashed.Count.ToString() + " beats";
 
                 if (counter > 10)
@@ -207,6 +211,56 @@ namespace Harti.Pattern
                     ExitGame();
                     failedText.text = "Failed! Try again :)";
                     failedText.gameObject.SetActive(true);
+                }*/
+
+
+
+                if(counter > 50)
+                {
+                    if (gameFactor > arranges.Length - 1) gameFactor = 0;
+
+                    GameObject[][] beatsGOs = arranges[gameFactor].ArrangeGame();
+                    for (int j = 0; j < beats.Length; j++)
+                    {
+                        for (int i = 0; i < beats[j].Length; i++)
+                        {
+                            if (beats[j][i].beatMode == Beat.BeatMode.smash)
+                            {
+                                Destroy(beats[j][i].gameObject);
+                                beats[j][i] = beatsGOs[j][i].GetComponent<Beat>();
+                                beats[j][i].xPosition = i;
+                                beats[j][i].yPosition = j;
+                            }
+                            else
+                            {
+                                Destroy(beatsGOs[j][i].gameObject); 
+                            }
+                        }
+                    }
+
+                    counter = 0;
+                    gameFactor++; 
+                }
+                else
+                {
+                    bool beatActive = false;
+                    for (int j = 0; j < beats.Length; j++)
+                    {
+                        for (int i = 0; i < beats[j].Length; i++)
+                        {
+                            if (beats[j][i].beatMode != Beat.BeatMode.inactive)
+                            {
+                                beatActive = true;
+                            }
+                        }
+                    }
+
+                    if (!beatActive)
+                    {
+                        ExitGame();
+                        failedText.text = "Failed! Try again :)";
+                        failedText.gameObject.SetActive(true);
+                    }
                 }
 
                 if (activateLeftSaber.action.inProgress)
@@ -338,7 +392,7 @@ namespace Harti.Pattern
                             {
                                 beatHovered.Smash(position, direction);
                                 beatsSmashedThisRound.Add(beatHovered);
-                                counter = 0;
+                                //counter = 0;
                             }
                         }
                     }
@@ -408,7 +462,7 @@ namespace Harti.Pattern
 
                                             beat.Smash(position, direction);
                                             beatsSmashedThisRound.Add(beat);
-                                            counter = 0;
+                                            //counter = 0;
                                         }
                                     }
                                     else
@@ -438,7 +492,7 @@ namespace Harti.Pattern
 
                                             beat.Smash(position, direction);
                                             beatsSmashedThisRound.Add(beat);
-                                            counter = 0;
+                                            //counter = 0;
                                         }
                                     }
                                 }
@@ -478,7 +532,7 @@ namespace Harti.Pattern
 
                                                 beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
-                                                counter = 0;
+                                                //counter = 0;
                                             }
                                         }
                                         else
@@ -518,7 +572,7 @@ namespace Harti.Pattern
 
                                                 beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
-                                                counter = 0;
+                                                //counter = 0;
                                             }
                                         }
                                     }
@@ -553,7 +607,7 @@ namespace Harti.Pattern
 
                                                 beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
-                                                counter = 0;
+                                                //counter = 0;
                                             }
                                         }
                                         else
@@ -593,7 +647,7 @@ namespace Harti.Pattern
 
                                                 beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
-                                                counter = 0;
+                                                //counter = 0;
                                             }
                                         }
                                     }
