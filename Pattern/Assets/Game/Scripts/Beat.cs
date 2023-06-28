@@ -31,8 +31,6 @@ namespace Harti.Pattern
         private GameObject[] hulls; 
         private GameObject beatSmashedEffectGO;
 
-        public float counter;
-
         // Start is called before the first frame update
         void Start()
         {
@@ -42,17 +40,7 @@ namespace Harti.Pattern
         // Update is called once per frame
         void Update()
         {
-            counter += Time.deltaTime;
 
-            if (counter > 50)
-            {
-                if (beatMode == BeatMode.normal)
-                {
-                    beatMode = BeatMode.inactive;
-                    beatNormal.SetActive(false);
-                    GameObject beatSmashedGO = Instantiate(beatSmashed, transform.position, Quaternion.identity);
-                }
-            }
         }
 
         public void Hover()
@@ -97,6 +85,15 @@ namespace Harti.Pattern
                 if (hulls.Length > 1)  hulls[1].AddComponent<Rigidbody>().AddExplosionForce(200f, position, 1);
                 StartCoroutine(DestroyHulls());
             }
+        }
+
+        public void DeActivate()
+        {
+            beatMode = BeatMode.inactive;
+            beatNormal.SetActive(false);
+            beatCollider.enabled = false;
+            GameObject beatSmashedGO = Instantiate(beatSmashed, transform.position, Quaternion.identity);
+            beatSmashedGO.transform.parent = transform;
         }
 
         private IEnumerator DestroyHulls()

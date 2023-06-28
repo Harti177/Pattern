@@ -29,14 +29,16 @@ namespace Harti.Pattern
         public InputActionReference activateLeftSaber;
         public InputActionReference activateRightSaber;
 
-        private int points = 0;
+        public TextMeshProUGUI score1;
+        public TextMeshProUGUI score2;
+        public TextMeshProUGUI score3;
+        public TextMeshProUGUI score4;
 
         public TextMeshProUGUI fps;
-        public TextMeshProUGUI score;
-        public TextMeshProUGUI scoreHigh;
-        public TextMeshProUGUI counterText;
-        public TextMeshProUGUI counterText1;
+
+        private int points = 0;
         public float counter;
+        int gameFactor = 0;
 
         //public LineRenderer lineRenderer;
         public GameObject lockLine;
@@ -44,18 +46,17 @@ namespace Harti.Pattern
         public GameObject lockLineEnd;
 
         private bool gameIsActive = false; 
-        private int currGameId = -1;
 
         public GameObject initialUi;
         public GameObject gameUi;
 
         public TextMeshProUGUI[] highScores;
-        public TextMeshProUGUI failedText;
+        public TextMeshProUGUI gameOverText;
 
         public GameObject leftRayInteractor;
         public GameObject rightRayInteractor;
 
-        int gameFactor = 0; 
+        string highScoresKey = "PatternHighScore2606_"; 
 
         private void OnEnable()
         {
@@ -75,14 +76,96 @@ namespace Harti.Pattern
 
         private void Start()
         {
+            GetAndSetHighScores(); 
+        }
+
+        private void DestroyAllBeats()
+        {
+            List<GameObject> toBeDeleted = new List<GameObject>();
+            if (beats != null)
+            {
+                for (int j = 0; j < beats.Length; j++)
+                {
+                    if (beats[j] != null)
+                    {
+                        for (int i = 0; i < beats[j].Length; i++)
+                        {
+                            if (beats[j][i] != null)
+                                toBeDeleted.Add(beats[j][i].gameObject);
+                        }
+                    }
+                }
+            }
+
+            foreach (GameObject go in toBeDeleted)
+            {
+                Destroy(go);
+            }
+        }
+
+        private void GetAndSetHighScores()
+        {
             for (int i = 0; i < highScores.Length; i++)
             {
-                highScores[i].text = PlayerPrefs.GetInt("PatternHighScore2006" + i, 0).ToString();
+                highScores[i].text = PlayerPrefs.GetInt(highScoresKey + i, 0) != 0 ? (i + 1) + ". " + PlayerPrefs.GetInt(highScoresKey + i, 0).ToString() : (i+1) + ". ";
+            }
+        }
+
+        private void SetScore()
+        {
+            score1.text = "Score\n" + points.ToString();
+            score2.text = "Score\n" + points.ToString();
+            score3.text = "Score\n" + points.ToString();
+            score4.text = "Score\n" + points.ToString();
+        }
+
+        private void SetGameOverText()
+        {
+            gameOverText.text = "You scored - " + points.ToString();
+            gameOverText.gameObject.SetActive(true);
+
+            int nth = 0;
+
+            for (int i = highScores.Length-1; i >= 0; i--)
+            {
+                if (PlayerPrefs.GetInt(highScoresKey + i, 0) == 0) 
+                {
+                    nth = i;
+                    continue; 
+                }
+
+                if (PlayerPrefs.GetInt(highScoresKey + i, 0) > points)
+                {
+                    break; 
+                }
+            }
+
+            int pointsPrev = 0; 
+            for (int j = 0; j <= nth; j++)
+            {
+                if (PlayerPrefs.GetInt(highScoresKey + j, 0) > points)
+                {
+                    continue;
+                }
+
+                if (pointsPrev != 0)
+                {
+                    int temp = pointsPrev;
+                    pointsPrev = PlayerPrefs.GetInt(highScoresKey + j, 0); 
+                    PlayerPrefs.SetInt(highScoresKey + j, temp);
+                }
+                else
+                {
+                    pointsPrev = PlayerPrefs.GetInt(highScoresKey + j, 0);
+                    PlayerPrefs.SetInt(highScoresKey + j, points);
+                }
             }
         }
 
         public void ExitGame()
         {
+            SetGameOverText();
+
             DestroyAllBeats();
 
             leftSaber.gameObject.SetActive(false);
@@ -96,10 +179,11 @@ namespace Harti.Pattern
             beatHovered = null;
             beatPrev = null;
             lockLine.SetActive(false);
-
             gameIsActive = false;
-            currGameId = -1;
+
             counter = 0;
+            points = 0;
+            gameFactor = 0;
 
             gameUi.GetComponent<CanvasGroup>().interactable = (false);
             gameUi.GetComponent<CanvasGroup>().alpha = 0;
@@ -109,62 +193,34 @@ namespace Harti.Pattern
             leftRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = true;
             rightRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = true;
 
-            points = 0; 
+            GetAndSetHighScores();
         }
 
-        private void DestroyAllBeats()
+        public void StartGame()
         {
-            List<GameObject> toBeDeleted = new List<GameObject>();
-            if (beats != null)
-            {
-                for (int j = 0; j < beats.Length; j++)
-                {
-                    if(beats[j] != null)
-                    {
-                        for (int i = 0; i < beats[j].Length; i++)
-                        {
-                            if(beats[j][i] != null)
-                                toBeDeleted.Add(beats[j][i].gameObject);
-                        }
-                    }
-                }
-            }
-
-            foreach (GameObject go in toBeDeleted)
-            {
-                Destroy(go);
-            }
-        }
-
-        public void StartGame(int gameId)
-        {
-            gameFactor = 0;
-            beatsSmashedThisRound = new List<Beat>();
-            beatsSmashed = new List<Beat>(); 
-            gameUi.GetComponent<CanvasGroup>().interactable = (true);
-            gameUi.GetComponent<CanvasGroup>().alpha = 1;
-            initialUi.GetComponent<CanvasGroup>().interactable = (false);
-            initialUi.GetComponent<CanvasGroup>().alpha = 0;
-
-            failedText.gameObject.SetActive(false);
-
-            gameIsActive = true; 
-
             DestroyAllBeats();
-
-            ambience.Stop();
-            ambience.clip = audioClipsGame[gameId];
-            ambience.Play();
 
             leftSaber.gameObject.SetActive(true);
             rightSaber.gameObject.SetActive(true);
+
+            ambience.Stop();
+            ambience.clip = audioClipsGame[gameFactor];
+            ambience.Play();
+
+            beatsSmashedThisRound = new List<Beat>();
+            beatsSmashed = new List<Beat>();
 
             beatLocked = false;
             beatHovered = null;
             beatPrev = null;
             lockLine.SetActive(false);
+            gameIsActive = true;
 
-            GameObject[][] beatsGOs = arranges[gameId].ArrangeGame();
+            counter = 0;
+            points = 0;
+            gameFactor = 0;
+
+            GameObject[][] beatsGOs = arranges[gameFactor].ArrangeGame();
             beats = new Beat[beatsGOs.Length][];
 
             for (int j = 0; j < beats.Length; j++)
@@ -178,46 +234,36 @@ namespace Harti.Pattern
                     beats[j][i].yPosition = j;
                 }
             }
-            counter = 0;
-            currGameId = gameId;
-            scoreHigh.text = "HighestScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
-            score.text = "Score\n" + "0";
+
+            gameUi.GetComponent<CanvasGroup>().interactable = (true);
+            gameUi.GetComponent<CanvasGroup>().alpha = 1;
+            initialUi.GetComponent<CanvasGroup>().interactable = (false);
+            initialUi.GetComponent<CanvasGroup>().alpha = 0;
 
             leftRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = false;
             rightRayInteractor.GetComponent<XRInteractorLineVisual>().enabled = false;
 
-            points = 0;
-            gameFactor++;
+            gameOverText.gameObject.SetActive(false);
+
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (gameIsActive)
             {
-                /*if(beatsSmashed.Count == 72)
-                {
-                    ExitGame();
-                    failedText.text = "Awesome! Play again :)"; 
-                    failedText.gameObject.SetActive(true);
-                }*/
-
                 counter += Time.deltaTime;
-                /*counterText.text = (10 - counter).ToString("0");
-                counterText1.text = "Smashed " + beatsSmashed.Count.ToString() + " beats";
 
-                if (counter > 10)
+                if(counter > 50 && !beatLocked)
                 {
-                    ExitGame();
-                    failedText.text = "Failed! Try again :)";
-                    failedText.gameObject.SetActive(true);
-                }*/
+                    if(beatHovered != null)
+                    {
+                        beatHovered.UnHover();
+                        beatHovered = null;
+                        beatPrev = null;
+                    }
 
-
-
-                if(counter > 50)
-                {
-                    if (gameFactor > arranges.Length - 1) gameFactor = 0;
+                    gameFactor++;
+                    if (gameFactor > arranges.Length) gameFactor = 0;
 
                     GameObject[][] beatsGOs = arranges[gameFactor].ArrangeGame();
                     for (int j = 0; j < beats.Length; j++)
@@ -230,6 +276,10 @@ namespace Harti.Pattern
                                 beats[j][i] = beatsGOs[j][i].GetComponent<Beat>();
                                 beats[j][i].xPosition = i;
                                 beats[j][i].yPosition = j;
+                            }else if (beats[j][i].beatMode == Beat.BeatMode.normal || beats[j][i].beatMode == Beat.BeatMode.hit)
+                            {
+                                beats[j][i].DeActivate();
+                                Destroy(beatsGOs[j][i].gameObject);
                             }
                             else
                             {
@@ -239,7 +289,6 @@ namespace Harti.Pattern
                     }
 
                     counter = 0;
-                    gameFactor++; 
                 }
                 else
                 {
@@ -258,8 +307,6 @@ namespace Harti.Pattern
                     if (!beatActive)
                     {
                         ExitGame();
-                        failedText.text = "Failed! Try again :)";
-                        failedText.gameObject.SetActive(true);
                     }
                 }
 
@@ -292,20 +339,13 @@ namespace Harti.Pattern
                                 if(beatsSmashedThisRound.Count == 1)
                                 {
                                     ExitGame();
-                                    failedText.text = "Failed! Try again :)";
-                                    failedText.gameObject.SetActive(true);
                                     return; 
                                 }
                                 points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                             } 
 
                             beatsSmashed.AddRange(beatsSmashedThisRound);
-                            score.text = "Score\n" + points.ToString();
-                            if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
-                            {
-                                PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
-                                scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
-                            }
+                            SetScore();
                             beatsSmashedThisRound = new List<Beat>();
                         }
                         lockLine.SetActive(false);
@@ -342,19 +382,12 @@ namespace Harti.Pattern
                                 if (beatsSmashedThisRound.Count == 1)
                                 {
                                     ExitGame();
-                                    failedText.text = "Failed! Try again :)";
-                                    failedText.gameObject.SetActive(true);
                                     return;
                                 }
                                 points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                             }
                             beatsSmashed.AddRange(beatsSmashedThisRound);
-                            score.text = "Score\n" + points.ToString();
-                            if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
-                            {
-                                PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
-                                scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
-                            }
+                            SetScore();
                             beatsSmashedThisRound = new List<Beat>();
                         }
                         lockLine.SetActive(false);
@@ -392,7 +425,6 @@ namespace Harti.Pattern
                             {
                                 beatHovered.Smash(position, direction);
                                 beatsSmashedThisRound.Add(beatHovered);
-                                //counter = 0;
                             }
                         }
                     }
@@ -411,20 +443,13 @@ namespace Harti.Pattern
                                     if (beatsSmashedThisRound.Count == 1)
                                     {
                                         ExitGame();
-                                        failedText.text = "Failed! Try again :)";
-                                        failedText.gameObject.SetActive(true);
                                         return;
                                     }
                                     points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                                 }
                                 beatsSmashed.AddRange(beatsSmashedThisRound);
-                                score.text = "Score\n" + points.ToString();
-                                if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
-                                {
-                                    PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
-                                    scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
-                                }
                                 beatsSmashedThisRound = new List<Beat>();
+                                SetScore();
                             }
                         }
                         else
@@ -462,7 +487,6 @@ namespace Harti.Pattern
 
                                             beat.Smash(position, direction);
                                             beatsSmashedThisRound.Add(beat);
-                                            //counter = 0;
                                         }
                                     }
                                     else
@@ -492,7 +516,6 @@ namespace Harti.Pattern
 
                                             beat.Smash(position, direction);
                                             beatsSmashedThisRound.Add(beat);
-                                            //counter = 0;
                                         }
                                     }
                                 }
@@ -532,7 +555,6 @@ namespace Harti.Pattern
 
                                                 beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
-                                                //counter = 0;
                                             }
                                         }
                                         else
@@ -572,7 +594,6 @@ namespace Harti.Pattern
 
                                                 beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
-                                                //counter = 0;
                                             }
                                         }
                                     }
@@ -607,7 +628,6 @@ namespace Harti.Pattern
 
                                                 beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
-                                                //counter = 0;
                                             }
                                         }
                                         else
@@ -647,7 +667,6 @@ namespace Harti.Pattern
 
                                                 beat.Smash(position, direction);
                                                 beatsSmashedThisRound.Add(beat);
-                                                //counter = 0;
                                             }
                                         }
                                     }
@@ -666,19 +685,12 @@ namespace Harti.Pattern
                         if (beatsSmashedThisRound.Count == 1)
                         {
                             ExitGame();
-                            failedText.text = "Failed! Try again :)";
-                            failedText.gameObject.SetActive(true);
                             return;
                         }
                         points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                     }
                     beatsSmashed.AddRange(beatsSmashedThisRound);
-                    score.text = "Score\n" + points.ToString();
-                    if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
-                    {
-                        PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
-                        scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
-                    }
+                    SetScore();
                     beatsSmashedThisRound = new List<Beat>();
                 }
 
@@ -707,19 +719,12 @@ namespace Harti.Pattern
                                     if (beatsSmashedThisRound.Count == 1)
                                     {
                                         ExitGame();
-                                        failedText.text = "Failed! Try again :)";
-                                        failedText.gameObject.SetActive(true);
                                         return;
                                     }
                                     points += (beatsSmashedThisRound.Count * beatsSmashedThisRound.Count);
                                 }
                                 beatsSmashed.AddRange(beatsSmashedThisRound);
-                                score.text = "Score\n" + points.ToString();
-                                if (points > PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0))
-                                {
-                                    PlayerPrefs.SetInt("PatternHighScore2006" + currGameId, points);
-                                    scoreHigh.text = "HighScore\n" + PlayerPrefs.GetInt("PatternHighScore2006" + currGameId, 0).ToString();
-                                }
+                                SetScore();
                                 beatsSmashedThisRound = new List<Beat>();
                             }
                         }
