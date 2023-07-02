@@ -121,7 +121,7 @@ namespace Harti.Pattern
 
         private void SetGameOverText()
         {
-            gameOverText.text = "You scored - " + points.ToString();
+            gameOverText.text = "Game Over! You scored - " + points.ToString();
             gameOverText.gameObject.SetActive(true);
 
             int nth = 0;
@@ -164,6 +164,26 @@ namespace Harti.Pattern
 
         public void ExitGame()
         {
+            StartCoroutine(DelayedExitGame());
+        }
+
+        private IEnumerator DelayedExitGame()
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            Beat[] allBeats = Game.FindObjectsOfType<Beat>();
+            foreach (Beat beat in allBeats)
+            {
+                beat.GameOver(); 
+            }
+
+            StartCoroutine(DelayedDestroy());
+        }
+
+        private IEnumerator DelayedDestroy()
+        {
+            yield return new WaitForSeconds(0.5f);
+
             SetGameOverText();
 
             DestroyAllBeats();
@@ -278,36 +298,14 @@ namespace Harti.Pattern
                                 beats[j][i].yPosition = j;
                             }else if (beats[j][i].beatMode == Beat.BeatMode.normal || beats[j][i].beatMode == Beat.BeatMode.hit)
                             {
-                                beats[j][i].DeActivate();
-                                Destroy(beatsGOs[j][i].gameObject);
-                            }
-                            else
-                            {
-                                Destroy(beatsGOs[j][i].gameObject); 
+                                counter = 0;
+                                ExitGame();
+                                return;
                             }
                         }
                     }
 
                     counter = 0;
-                }
-                else
-                {
-                    bool beatActive = false;
-                    for (int j = 0; j < beats.Length; j++)
-                    {
-                        for (int i = 0; i < beats[j].Length; i++)
-                        {
-                            if (beats[j][i].beatMode != Beat.BeatMode.inactive)
-                            {
-                                beatActive = true;
-                            }
-                        }
-                    }
-
-                    if (!beatActive)
-                    {
-                        ExitGame();
-                    }
                 }
 
                 if (activateLeftSaber.action.inProgress)

@@ -31,6 +31,30 @@ namespace Harti.Pattern
         private GameObject[] hulls; 
         private GameObject beatSmashedEffectGO;
 
+        private Vector3 randomPosition; 
+        private Vector3 toBePosition; 
+
+        private void OnEnable()
+        {
+            randomPosition = GetRandomPoint();
+            toBePosition = transform.position; 
+            transform.position = randomPosition;
+        }
+
+        private void OnDisable()
+        {
+            
+        }
+
+        private Vector3 GetRandomPoint()
+        {
+            float x = Random.Range(-1f, 1f);
+            float y = Random.Range(-1f, 1f);
+            float z = Random.Range(-1f, 1f);
+            float normal = 1 / Mathf.Sqrt(x * x + y * y + z * z);
+            return new Vector3(x* normal * 20f, y * normal * 20f, z * normal * 20f);
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -40,7 +64,13 @@ namespace Harti.Pattern
         // Update is called once per frame
         void Update()
         {
-
+            if(Vector3.Distance(transform.position, toBePosition)> (2f * Time.deltaTime))
+            {
+                transform.position = Vector3.Lerp(transform.position, toBePosition, 2f * Time.deltaTime);
+            }else if (Vector3.Distance(transform.position, toBePosition) > 0.001f)
+            {
+                transform.position = toBePosition;
+            }
         }
 
         public void Hover()
@@ -96,6 +126,15 @@ namespace Harti.Pattern
             beatSmashedGO.transform.parent = transform;
         }
 
+        public void GameOver()
+        {
+            beatSmashedEffectGO = Instantiate(beatSmashedEffect, transform.position, Quaternion.identity);
+
+            GameObject.Find("SmashSound").GetComponent<AudioSource>().Play();
+
+            StartCoroutine(DestroyGameOverEffect());
+        }
+
         private IEnumerator DestroyHulls()
         {
             yield return new WaitForSeconds(2f);
@@ -112,6 +151,15 @@ namespace Harti.Pattern
             {
                 Destroy(go);
             }
+
+            Destroy(beatSmashedEffectGO);
+        }
+
+        private IEnumerator DestroyGameOverEffect()
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            beatNormal.SetActive(false);
 
             Destroy(beatSmashedEffectGO);
         }
